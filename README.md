@@ -29,7 +29,7 @@ In terms of the architecture, you can see that a spark cluster consists of the s
 
 Image Credit: https://docs.cloud.sdu.dk/Apps/spark-cluster.html
 
-Normally, each node (Spark Master, Spark Worker) is represented as a **single machine** that has its own CPU and RAM. However, if you try to run Spark **locally**, each node will be represented as a **single core**, except for the Spark master. The good thing is that Apache allows a simulated distributed environment on the cores when you are trying to run Spark on local machine. However, Spark may not work effectively in this case, but it is good enought to allow developers to test their Spark application before they proceed with the application deployment.
+Normally, each node (Spark Master, Spark Worker) is represented as a **single machine** that has its own CPU and RAM. However, if you try to run Spark **locally**, each node will be represented as a **single core**, except for the Spark master. The good thing is that Spark allows a simulated distributed environment on the cores when you are trying to run Spark on local machine. However, Spark may not work effectively in this case, but it is good enough to allow developers to test their Spark application before they proceed with the application deployment.
 
 To allow for in memory processing, Spark uses the **Resilient Distributed Dataset (RDD)** functionality. In addition of the **in-memory storage**, it is also **immutable** to prevent unwanted modification from concurrent operations. Furthermore, it is also divided into partitions where each partition is stored in each node. These features allow seamless parallelization.
 
@@ -41,7 +41,7 @@ To allow for in memory processing, Spark uses the **Resilient Distributed Datase
 
 Image Credit: https://phoenixnap.com/kb/wp-content/uploads/2021/04/hadoop-spark-data-processing.png
 
-**Apache Hadoop** is well known for its **MapReduce** ability, where it performs **batch-processing** by mapping each partition of data across multiple nodes, and then aggregate the results from multiple nodes into 1 object. However, in Hadoop, it will always write every single intermediate data in every single operation **into the disk**, which may not be efficient. For this reason, you can see that Spark can execute tasks much faster (**100x in memory, 10x in disk**) than Hadoop [cited from https://www.analyticsvidhya.com/blog/2022/06/apache-spark-vs-hadoop-mapreduce-top-7-differences/#:~:text=Apache%20Spark%20is%20very%20much,every%20Map%20or%20Reduce%20action.]. However, Spark may not work efficiently when it needs to hancle data that is much larger than the given RAM memory, and RAM is usually much more expensive than SSD/HDD. Hence, if for example, your priority is to maximize scalability and to minimize cost, and care less about speed, Hadoop may be the better option. However, take note that you will need to use external Machine Learning libraries as Hadoop does not support functionalities other than batch-processing. Additionally, it can only be implemented in **Java**.
+**Apache Hadoop** is well known for its **MapReduce** ability, where it performs **batch-processing** by mapping each partition of data across multiple nodes, and then aggregate the results from multiple nodes into 1 object. However, in Hadoop, it will always write every single intermediate data in every single operation **into the disk**, which may not be efficient. For this reason, you can see that Spark can execute tasks much faster (**100x in memory, 10x in disk**) than Hadoop [cited from https://www.analyticsvidhya.com/blog/2022/06/apache-spark-vs-hadoop-mapreduce-top-7-differences/#:~:text=Apache%20Spark%20is%20very%20much,every%20Map%20or%20Reduce%20action.]. However, Spark may not work efficiently when it needs to hancle data that is much larger than the given RAM memory, and RAM is usually much more expensive than SSD/HDD. Hence, if for example, your priority is to **maximize scalability** and **to minimize cost**, and **care less about speed**, Hadoop may be the better option. However, take note that you will need to use external Machine Learning libraries as Hadoop does not support functionalities other than batch-processing. Additionally, it can only be implemented in **Java**.
 
 ## Scala vs Python
 
@@ -52,7 +52,7 @@ Image Credit: https://phoenixnap.com/kb/wp-content/uploads/2021/04/hadoop-spark-
 
 Image Credit: https://dezyre.gumlet.io/images/blog/scala-vs-python-for-apache-spark/Scala_vs_Python_for_Spark.webp?w=376&dpr=2.6
 
-For this project, I will be using **Scala** as the programming language. One of the advantages of Scala compared to Python is that it has built-in functions that support **concurrent programming** and **multithreading**, which will be advantageous for parallel processing. Additioanlly, it is also more **robust in bug detection**, and hence it can help to minimize the time for debugging. However, take note that Scala is harder to learn compared to Python. But if you have used Java before, Scala is actually similar to it.
+For this project, I will be using **Scala** as the programming language. One of the advantages of Scala compared to Python is that it has built-in functions that support **concurrent programming** and **multithreading**, which will be advantageous for parallel processing. Additionally, it is also more **robust in bug detection**, and hence it can help to minimize the time for debugging. However, take note that Scala is harder to learn compared to Python. But if you have used Java before, Scala is actually similar to it.
 
 ## Gradle
 
@@ -64,11 +64,11 @@ When people are working with Python, they usually use PIP or Anaconda as the pac
 
 ## Demonstration
 
-For the purpose of learning only, I will try to implement Spark on local machine using 7 cores, where 1 core is for the Spark Master and 6 cores are for the spark workers. The objective is to predict whether a patient has a **diabetes** based on multiple factors such as Age, Blood Pressure, etc. The dataset is taken from Kaggle Link as follows: https://www.kaggle.com/datasets/prosperchuks/health-dataset
+For the purpose of learning only, I will try to implement Spark on local machine using **7 cores**, where hypothetically **1 core** is for the **Spark Master** and **6 cores** are for the **spark workers**. The objective is to predict whether a patient has a **diabetes** based on multiple factors such as Age, Blood Pressure, etc. The dataset is taken from Kaggle Link as follows: https://www.kaggle.com/datasets/prosperchuks/health-dataset
 
-I am going to use the RandomForest model for this use case, where I will be testing 6 different **maxDepth** values (3, 6, 9, 12, 15, 18) as well as 4 different **numTrees** values (5, 1, 15, 20), and hence resulting in 24 different sets of hyperparameters. 
+I am going to use the RandomForest model for this use case, where I will be testing 6 different **maxDepth** values (3, 6, 9, 12, 15, 18) as well as 4 different **numTrees** values (5, 1, 15, 20), and hence resulting in 6 x 4 = 24 different sets of hyperparameters. 
 
-The aim is to distribute the sets of hyperparameters into multiple nodes (6 different cores), such that each node handles 4 sets of hyperparameters. We will be using the org.apache.spark.ml.tuning.CrossValidator as well as the org.apache.spark.ml.tuning.ParamGrid to allow for the parallel hyperparameter tuning.
+The aim is to distribute the sets of hyperparameters into multiple nodes (6 different cores), such that each node handles 4 sets of hyperparameters. We will be using the org.apache.spark.ml.tuning.CrossValidator as well as the org.apache.spark.ml.tuning.ParamGrid to allow the parallel hyperparameter tuning.
 
 In the end, we will obtain the best set of hyperparameters as well as the precision score based on the test dataset.
 
