@@ -93,5 +93,4 @@ Lastly, as we are using the parallelization, you can see that the model finetuni
 
 ## Next Step
 
-- Configure the Spark session such that it runs on HDFS (Hadoop Distributed File System) for higher fault-tolerance as data is being replicated across all data nodes within HDFS.
 - Make use of Scala's best coding practices.
